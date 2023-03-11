@@ -48,66 +48,34 @@ function setPoetryPriceInstance(){
 
 function getPriceFromCart(cartIdArr){
   let finalPrice=0;
-  let quant;
-  let itemId;
   let poetryPrice=setPoetryPriceInstance();
-  let isNum = 1;
-  let index=0;
-  let lastNumIndex=0;
+  let itemId, quant, numStr;
 
-  if(cartIdArr.length>1){
-  
-    //it's interating through the loop but doesn't have separate values for each index
-    //2item,3item
+  for (let i= 0; i<cartIdArr.length; i++){
+    quant =0;
+    numStr="";
 
-    for(let i=0; i<cartIdArr.length; i++){
-      console.log("index in for loop: "+index); 
-      console.log("evaluating for" + cartIdArr[i]);
-     
-      while (isNum) //12poetry-book index: 0
-      {
-        quant=parseInt(cartIdArr[i].substring(0,index+1)); //1 index: 0 12 index: 1
-
-        if((quant>=10)){ 
-          index++; //index: 2
-          console.log("index in quant>=10 for quant " + quant.toString());
-          lastNumIndex=index; //index: 2
-          isNum = parseInt(cartIdArr[i].substring(0,index+1)); //12p -> NaN index:2
-        }
-
-        else if ((quant<10)){
-          lastNumIndex=0;
-          index++; 
-          console.log("index in quant<10 for quant " + quant.toString());
-          isNum = parseInt(cartIdArr[i].substring(0,index+1)); //12
-        } 
+    for (let j=0; j<cartIdArr[i].length; j++){
+      if(!isNaN(parseInt(cartIdArr[i][j]))) {
+        numStr += cartIdArr[i][j];
       }
-      itemId=cartIdArr[i].substring(lastNumIndex); //poetry-book
-      console.log(itemId);
-      console.log(i);
-      if (itemId === CART_ID_ARR[0])
-      {
-        finalPrice+= (quant*poetryPrice); // 12 * price
-      }
-      else if (itemId === CART_ID_ARR[1])
-      {
-        finalPrice+=(quant*EBOOK_PRICE)
+      else {
+        break;
       }
     }
-  }
-  else if (cartIdArr.length===1) {
 
-    quant=parseInt(cartIdArr[0].substring(0,1));
-    itemId=cartIdArr[0].substring(1);
-    if (itemId === CART_ID_ARR[0])
+    if (numStr!=="")
     {
-      finalPrice+= (quant*poetryPrice);
+      quant = parseInt(numStr);
     }
-    else if (itemId === CART_ID_ARR[1])
-    {
-      finalPrice+=(quant*EBOOK_PRICE)
+    itemId = cartIdArr[i].substring(numStr.length);
+
+    if (itemId === CART_ID_ARR[0]){
+      finalPrice += quant*poetryPrice;
     }
-    
+    else if (itemId=== CART_ID_ARR[1]){
+      finalPrice += quant*EBOOK_PRICE;
+    }
   }
 
   document.getElementById("total-price").innerText = finalPrice;
