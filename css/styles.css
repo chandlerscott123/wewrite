@@ -43,7 +43,7 @@ border:1px solid #d0bebb;
   margin-left:auto;
 }
 
-.container {
+#beforepay {
   background-image: url('../img/mainback.jpg');
   background-size: cover;
   background-position: center;

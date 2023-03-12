@@ -41,7 +41,7 @@
     </div>
   </nav>
   
-  <div class="container">
+  <div class="container" id="beforePay">
     <div class="row d-flex justify-content-center">
       <!--Grid column-->
       <div class="col-md-6">
@@ -142,7 +142,7 @@
               <button class="btn btn-dark" type="submit">Get total</button>
             </form>
           </li>
-          <li class="list-group-item" id="total-price"></li>
+          <li class="list-group-item font-weight-bold" id="total-price"></li>
         </ul>
       </div>
       <!--Grid column-->
@@ -150,6 +150,136 @@
     </div>
     <!--Grid row-->
   </div>
+
+  <section id="payment" style="background-color:#f4f4f4;">
+    <div class="container py-5">
+      <div class="row d-flex justify-content-center">
+        <div class="col-md-9 col-lg-7 col-xl-5">
+          <div class="card">
+            <div class="card-body">
+              <div class="card-title d-flex justify-content-between mb-0">
+                <p class="text-muted mb-0">Total: </p>
+                <p class="mb-0"></p>
+              </div>
+            </div>
+          <div class="rounded-bottom" style="background-color: #eee;">
+          <div class="card-body">
+            <p class="mb-4">Your payment details</p>
+            <div class="form-outline mb-3">
+              <input type="text" id="cardNum" class="form-control"
+              placeholder="1234 5678 1234 5678">
+              <label class="form-label" for="cardNum">Card Number</label>
+            </div>
+            <div class="row mb-3">
+              <div class="col-6">
+                <div class ="form-outline">
+                  <input type="password" id="expDate" class="form-control"
+                  placeholder="MM/YYYY">
+                  <label class="form-label" for="expDate">Expires</label>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="form-outline">
+                  <input type="password" id="cvv" class="form-control"
+                  placeholder="CVV">
+                  <label class="form-label" for="cvv">CVV</label>
+                </div>
+              </div>
+            </div>
+            <button class="btn btn-info btn-block">Submit Order</button>
+          </div>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <div class="card border border-dark" id="receipt" style="background: #ffffff;">
+    <div class="card-body">
+      <div class="container mb-5 mt-3">
+        <div class="row d-flex align-items-baseline">
+          <div class="col-xl-9">
+            <p style="color:#7f3c31; font-size:20px;">Reciept</p>
+          </div>
+          <hr>
+        </div>
+
+        <div class="container">
+          <div class="col-md-12">
+            <div class="text-center">
+              <a href=# style="max-width: 30%;"><img width="70" height="50" src="../img/logo.png"></a>
+              <p class="pt-0"></p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xl-8">
+              <ul class="list-unstyled">
+                <li class="text-muted"></li>
+                <li class="text-muted"></li>
+                <li class="text-muted"></li>
+                <li class="text-muted"></li>
+              </ul>
+            </div>
+            <div class="col-xl-4">
+              <p class="text-muted">Receipt</p>
+              <ul class="list-unstyled">
+                <li class="text-muted"><i class="fas fa-circle" style="color:#83605b;"></i>
+                <span class="fw-bold">Card:</span><span class="text-muted" id="cardNum"></span></li>
+              </ul>
+            </div>
+
+          </div>
+          <div class="row my-2 mx-1 justify-content-center">
+            <table class="table table-striped table-borderless">
+              <thead style="background-color:#83605b;" class="text-white">
+                  <tr>
+                    <th scope="col"># </th>
+                    <th scope="col">Name </th>
+                    <th scope="col">Additional Info</th>
+                    <th scope="col">Price <span id="priceSpan"></span></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                  <th scope="row">1</th>
+                  <td>Poetry Book</td>
+                  <td><span id="poetry-qty"></span></td>
+                  <td><span id="poetry-type"></span></td>
+                  <td><span id="poetry-price"></span></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">2</th>
+                    <td>Digital Anthology</td>
+                    <td><span id="ebook-qty"></span></td>
+                    <td><span ></span></td>
+                    <td><span id="ebook-price"></span></td>
+                  </tr>
+                </tbody>    
+            </table>
+          </div>
+          <div class="row">
+            <div class="col-xl-8">
+              <p class="ms-3"> Payment infomation</p>
+            </div>
+            <div class="col-xl-3">
+              <ul class="list-unstyled">
+                <li class="text-muted ms-3"><span class="text-black me-4">Subtital</span><span id="subtotal"></span></li>
+                <li class="text-muted ms-3 mt-2"><span class="text-black me-4">Discount</span><span id="discount"></span></li>
+              </ul>
+              <p class="text-black float-start"><span class="text-black me-3"></span> 
+              <span style="font-size: 25px;" id="totalAmount"></span></p>
+            </div>
+          </div>
+          <hr>
+        </div>
+
+
+
+      </div>
+      
+    </div>
+</div>
 
 
   <div class="blockcode">
