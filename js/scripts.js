@@ -18,10 +18,10 @@ $('.header').height($(window).height());
 });
 
 function UnhideElement(elem){
-  elem.style.display="block";
+  elem.classList.remove("d-none");
 }
 function hideElement(elem){
-  elem.style.display="none";
+  elem.classList.add("d-none");
 }
 
 function setPoetryPriceInstance(){
@@ -54,8 +54,13 @@ function setPoetryPriceInstance(){
 
 function getPriceFromCart(cartIdArr){
   let finalPrice=0;
-  let poetryPrice=setPoetryPriceInstance();
-  let itemId, quant, numStr;
+  let price=0;
+  const poetryPrice=setPoetryPriceInstance();
+  let itemId, quant, numStr, uqPoetryPrice, uqEbookPrice;
+  const poetryDisc =.12;
+  const ebookDisc=.2;
+  let totalDisc, uqPoetryDisc, uqEbookDisc;
+  
 
   for (let i= 0; i<cartIdArr.length; i++){
     quant =0;
@@ -77,14 +82,35 @@ function getPriceFromCart(cartIdArr){
     itemId = cartIdArr[i].substring(numStr.length);
 
     if (itemId === CART_ID_ARR[0]){
-      finalPrice += quant*poetryPrice;
+      price += (quant*poetryPrice);
+      price-= (price*poetryDisc);
+      uqPoetryDisc=price*poetryDisc;
+      uqPoetryPrice = price;
+      finalPrice+=price;
     }
     else if (itemId=== CART_ID_ARR[1]){
-      finalPrice += quant*EBOOK_PRICE;
+      price += ((quant*EBOOK_PRICE));
+      price-=(price*ebookDisc)
+      uqEbookDisc=price*ebookDisc;
+      uqEbookPrice=price;
+      finalPrice+=price;
     }
   }
+  
+  totalDisc=uqPoetryDisc + uqEbookDisc;
 
+  totalDisc = totalDisc.toFixed(2);
+  finalPrice = finalPrice.toFixed(2);
+  price = price.toFixed(2);
+
+
+  document.getElementById("poetry-price").innerText=uqEbookPrice.toFixed(2);
+  document.getElementById("ebook-price").innerText=uqEbookPrice.toFixed(2);
+
+  document.getElementById("subtotal").innerText="$"+price;
+  document.getElementById("discount").innerText="$" + totalDisc;
   document.getElementById("total-price").innerText = "$" + finalPrice;
+  document.getElementById("totalPrice").innerText="$"+finalPrice;
 
 }
 
@@ -93,7 +119,6 @@ function processCart(event)
   let cart =[];
   let poetryQty = parseInt(document.querySelector("input#poetryQtyInput").value);
   let ebookQty = parseInt(document.querySelector("input#ebookQtyInput").value);
-  let beforePayDiv = document.getElementById("beforePay");
   let paymentSec = document.getElementById("payment");
   cart = [poetryQty, ebookQty];
 
@@ -116,6 +141,82 @@ function processCart(event)
   
 }
 
+function populateTable(itemInfoArr){
+  let cover, size, type, infoStr;
+  const itemQty = itemInfoArr[1];
+  if (itemInfoArr[0]===CART_ID_ARR[0]){
+    size = document.querySelector("input[name='sizeRadio']:checked").value;
+    type = document.querySelector("input[name='typeRadio']:checked").value;
+    cover = document.querySelector("input[name='coverRadio']:checked").value;
+
+    infoStr = "Size: " + size + "<br>"+ "Type: " + type + "<br>"+"Cover: " +cover;
+    document.getElementById("poetry-type").innerText =infoStr;
+    document.getElementById("poetry-qty").innerText = itemQty;
+  }
+  else if (itemInfoArr[0] === CART_ID_ARR[1]){
+
+    document.getElementById("ebook-qty").innerText = itemInfoArr[1];
+
+  }
+
+
+}
+
+function displayReciept(lastFour, poetryQty, ebookQty){
+
+  document.querySelector("span#cardNum").innerText = lastFour;
+  let poetryInfoArray = [];
+  let ebookInfoArray=[];
+  const poetryId =  CART_ID_ARR[0];
+  const ebookId = CART_ID_ARR[1];
+  
+  if (poetryQty!==0 || ebookQty !==0)
+  {
+    if (ebookQty && !poetryQty){
+      ebookInfoArray=[ebookId,ebookQty];
+      populateTable(ebookInfoArray);
+    }
+    else if(!ebookQty&&poetryQty){
+      poetryInfoArray = [poetryId, poetryQty];
+      populateTable(poetryInfoArray);
+    }
+    else if (ebookQty && poetryQty){
+      poetryInfoArray=[poetryId,poetryQty];
+      ebookInfoArray=[ebookId,ebookQty];
+      populateTable(poetryInfoArray);
+      populateTable(ebookInfoArray);
+
+    }
+    
+    
+  }
+
+}
+
+function processPayment(event){
+  const beforePay = document.getElementById("beforePay");
+  hideElement(beforePay);
+  const paymentSec = document.getElementById("payment");
+  const paymentConfirm = document.getElementById("paymentConfirm");
+  event.preventDefault();
+  let poetryQty = parseInt(document.querySelector("input#poetryQtyInput").value);
+  let ebookQty = parseInt(document.querySelector("input#ebookQtyInput").value);
+  let lastFour;
+  let cardNum = document.querySelector("input#cardNum").value;
+  
+  if (cardNum.length === 16)
+  {
+    lastFour = cardNum.substring(12); 
+  }
+  else if (cardNum.length ===19)  
+  {
+    lastFour =cardNum.substring(16);
+  }
+
+  hideElement(paymentSec);
+  UnhideElement(paymentConfirm);
+  displayReciept(lastFour, poetryQty, ebookQty);
+}
 
 function onSubmitPoetryForm(event){
   event.preventDefault();
@@ -124,13 +225,18 @@ function onSubmitPoetryForm(event){
 }
 
 window.addEventListener("load", function(){
-  let poetryForm = document.getElementById("poetryForm");
-  let totalForm = document.getElementById("get-total");
-  let paymentSec = document.getElementById("payment");
+  
+  const poetryForm = document.getElementById("poetryForm");
+  const totalForm = document.getElementById("get-total");
+  const paymentSec = document.getElementById("payment");
+  const paymentForm = document.getElementById("paymentInfo"); 
+  const paymentConfirm = document.getElementById("paymentConfirm");
 
   hideElement(paymentSec);
+  hideElement(paymentConfirm);
   poetryForm.addEventListener("submit", onSubmitPoetryForm);
   totalForm.addEventListener("submit", processCart);
+  paymentForm.addEventListener("submit", processPayment);
   
 
 
